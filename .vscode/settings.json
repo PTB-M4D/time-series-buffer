@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "~/python_venv/basic/Scripts/python.exe",
+    "python.formatting.provider": "black",
+    "python.testing.pytestArgs": [
+        "test"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "autoDocstring.customTemplatePath": ".vscode/docstring_template.js"
+}
