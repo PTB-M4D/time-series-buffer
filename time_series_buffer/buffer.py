@@ -39,7 +39,10 @@ class TimeSeriesBuffer:
     def __len__(self):
         return len(self.buffer)
 
-    def add(self, data=None, time=self.empty_value, time_unc=self.empty_unc, val=self.empty_value, val_unc=self.empty_unc):
+    def __repr__(self):
+        return "<TimeSeriesBuffer> (length: {0})".format(len(self))
+
+    def add(self, data=None, time=empty_value, time_unc=empty_unc, val=empty_value, val_unc=empty_unc):
         """Append one or more new datapoints to the buffer. 
         A datapoint consists of the tuple (time, time_uncertainty, value, value_uncertainty).
         
