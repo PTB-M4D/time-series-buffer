@@ -204,7 +204,7 @@ class TimeSeriesBuffer:
         # take the next samples from the beginning of buffer
         n_buffer = len(self.buffer)
         n_pop = min(n_samples, n_buffer)
-        next_samples = [self.buffer[n_buffer - (i + 1)] for i in range(n_pop)]
+        next_samples = [self.buffer[i] for i in range(n_buffer - n_pop, n_buffer)]
 
         # return as specified
         return self._return_converter(next_samples)
@@ -231,7 +231,7 @@ class TimeSeriesBuffer:
                 tt = unumpy.uarray(t, ut)
                 vv = unumpy.uarray(v, uv)
 
-                return np.vstack(tt, vv).T
+                return np.vstack((tt, vv)).T
 
             elif self.return_type == "uarrays":
                 tt = unumpy.uarray(t, ut)
