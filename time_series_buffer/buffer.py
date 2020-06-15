@@ -1,10 +1,11 @@
 from collections import deque
 
 import numpy as np
+import uncertainties
 from uncertainties import unumpy
 
-
 __all__ = ["TimeSeriesBuffer"]
+
 
 class TimeSeriesBuffer:
     """
@@ -14,7 +15,7 @@ class TimeSeriesBuffer:
 
     empty_value = np.nan
     empty_unc = 0.0  # np.nan?
-    supported_iterable_types = [list, tuple, np.ndarray]
+    supported_iterable_types = (list, tuple, np.ndarray)
 
     def __init__(self, maxlen=10, return_type="array"):
         """Initialize a FIFO buffer.
@@ -40,9 +41,16 @@ class TimeSeriesBuffer:
         return len(self.buffer)
 
     def __repr__(self):
-        return "<TimeSeriesBuffer> (length: {0})".format(len(self))
+        return "<TimeSeriesBuffer> ({0}/{1})".format(len(self), self.buffer.maxlen)
 
-    def add(self, data=None, time=empty_value, time_unc=empty_unc, val=empty_value, val_unc=empty_unc):
+    def add(
+        self,
+        data=None,
+        time=empty_value,
+        time_unc=empty_unc,
+        val=empty_value,
+        val_unc=empty_unc,
+    ):
         """Append one or more new datapoints to the buffer. 
         A datapoint consists of the tuple (time, time_uncertainty, value, value_uncertainty).
         
@@ -109,31 +117,54 @@ class TimeSeriesBuffer:
                 self.buffer.append((t, ut, v, uv))
 
         # time series is given as iterable of floats
-        elif isinstance(time, self.supported_iterable_types):
-            # time
-            t = time
+        elif isinstance(time, self.supported_iterable_types):  #
+            # needed in case of ufloat
+            ut_is_already_set = False
+            uv_is_already_set = False
 
-            # time uncertainty (could be array of same shape as time, single float or None)
-            if isinstance(time_unc, self.supported_iterable_types):
-                ut = time_unc
+            # time (could be array of float or ufloat)
+            if isinstance(time[0], uncertainties.core.Variable):
+                t = unumpy.nominal_values(time)
+                ut = unumpy.std_devs(time)
+                ut_is_already_set = True
             else:
-                ut = [time_unc] * len(time)
+                t = time
 
-            # value (could be array of same shape as time, single float or None)
+            # time uncertainty (could be array of same shape as time, single float or inherited from ufloat time)
+            if not ut_is_already_set:
+                if isinstance(time_unc, self.supported_iterable_types):
+                    ut = time_unc
+                else:
+                    ut = [time_unc] * len(time)
+
+            # value (could be array of same shape as time or single float)
             if isinstance(val, self.supported_iterable_types):
-                v = val
+                if isinstance(val[0], uncertainties.core.Variable):
+                    v = unumpy.nominal_values(val)
+                    uv = unumpy.std_devs(val)
+                    uv_is_already_set = True
+                else:
+                    v = val
             else:
                 v = [val] * len(time)
 
-            # value uncertainty (could be array of same shape as time, single float or None)
-            if isinstance(val_unc, self.supported_iterable_types):
-                uv = val_unc
-            else:
-                uv = [val_unc] * len(time)
+            # value uncertainty (could be array of same shape as time, single float or inherited from ufloat val)
+            if not uv_is_already_set:
+                if isinstance(val_unc, self.supported_iterable_types):
+                    uv = val_unc
+                else:
+                    uv = [val_unc] * len(time)
 
-            for datapoint in zip(t, ut, v, uv):
-                self.buffer.append(datapoint)
-        
+            # append to buffer after shape-check
+            if len(t) == len(ut) == len(v) == len(uv):
+                for datapoint in zip(t, ut, v, uv):
+                    self.buffer.append(datapoint)
+            else:
+                raise ValueError(
+                    "Lengths of time, time_unc, val or val_unc don't match. "
+                    "Check your inputs."
+                )
+
         elif isinstance(time, float):
             self.buffer.append((time, time_unc, val, val_unc))
 
@@ -179,16 +210,16 @@ class TimeSeriesBuffer:
         return self._return_converter(next_samples)
 
     def _return_converter(self, samples):
-        
+
         if self.return_type == "list":
             return samples
 
         else:
             data = np.array(samples)
-            t = data[:,0]
-            ut = data[:,1]
-            v = data[:,2]
-            uv = data[:,3]
+            t = data[:, 0]
+            ut = data[:, 1]
+            v = data[:, 2]
+            uv = data[:, 3]
 
             if self.return_type == "array":
                 return np.vstack(data)
@@ -200,11 +231,10 @@ class TimeSeriesBuffer:
                 tt = unumpy.uarray(t, ut)
                 vv = unumpy.uarray(v, uv)
 
-                return np.vstack(tt,vv).T
+                return np.vstack(tt, vv).T
 
             elif self.return_type == "uarrays":
                 tt = unumpy.uarray(t, ut)
                 vv = unumpy.uarray(v, uv)
 
                 return tt, vv
-
