@@ -1,3 +1,3 @@
 from .buffer import TimeSeriesBuffer
 
-__version__ = "0.0.2"
+__version__ = "v0.1.0-beta1"
