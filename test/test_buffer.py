@@ -166,6 +166,22 @@ def test_show_size_and_order():
     assert np.all(result == data[-n_samples:, :])
 
 
+def test_show_all():
+
+    M = 4
+    tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="array")
+    data = np.random.random((N, M))
+    tsb.add(data=data)
+
+    # return some buffer elements without pop
+    result = tsb.show(n_samples=-1)
+
+    # check that show does not alter the buffer
+    assert len(result) == N
+
+    # check if newest elements are received and order is as expected
+    assert np.all(result == data)
+
 def test_return_format_list():
     M = 4
     tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="list")
