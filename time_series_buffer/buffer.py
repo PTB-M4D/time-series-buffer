@@ -185,7 +185,7 @@ class TimeSeriesBuffer:
         
         Return
         ------
-            Depends on return_type, see :py:func:`show` for details?
+            Depends on return_type, see :func:`__init__` for details
         """
 
         # take the next samples from the beginning of buffer
@@ -196,13 +196,27 @@ class TimeSeriesBuffer:
         return self._return_converter(next_samples)
 
     def show(self, n_samples=1):
-        """
-        View the latest `n_samples` additions to the buffer. Returns the format that
+        """View the latest `n_samples` additions to the buffer. Returns the format that
         was specified during init of the buffer.
+
+        Parameters
+        ----------
+            n_samples : int (default: 1)
+                How many samples to return. 
+                Return all samples in buffer, if set to -1. 
+        
+        Returns
+        -------
+            Depends on return_type, see :func:`__init__` for details
         """
+        # get length of internal buffer
+        n_buffer = len(self.buffer)
+
+        # return all if n_samples is set -1
+        if n_samples == -1:
+            n_samples = n_buffer
 
         # take the next samples from the beginning of buffer
-        n_buffer = len(self.buffer)
         n_pop = min(n_samples, n_buffer)
         next_samples = [self.buffer[i] for i in range(n_buffer - n_pop, n_buffer)]
 
