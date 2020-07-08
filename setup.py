@@ -17,6 +17,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     keywords="buffer time-series uncertainty metrology",
     install_requires=[
+        "numpy",
         "uncertainties",
     ],
     classifiers=[
