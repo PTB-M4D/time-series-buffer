@@ -16,6 +16,10 @@ setuptools.setup(
     url="https://github.com/PTB-PSt1/time-series-buffer",
     packages=setuptools.find_packages(),
     keywords="buffer time-series uncertainty metrology",
+    install_requires=[
+        "numpy",
+        "uncertainties",
+    ],
     classifiers=[
         "Topic :: Utilities",
         "Topic :: Scientific/Engineering",
