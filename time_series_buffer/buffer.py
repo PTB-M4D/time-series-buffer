@@ -231,12 +231,11 @@ class TimeSeriesBuffer:
         else:
             # handle empty buffer
             if len(samples) == 0:
-                data = np.array([])
-                data.shape = (0,4)
-                t = np.array([])
-                ut = np.array([])
-                v = np.array([])
-                uv = np.array([])
+                data = np.empty((0, 4))
+                t = np.empty((0))
+                ut = np.empty((0))
+                v = np.empty((0))
+                uv = np.empty((0))
             
             # handle non empty buffer
             else:
