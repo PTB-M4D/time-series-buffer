@@ -259,7 +259,7 @@ def test_pop_empty_array():
     assert result.size == 0
 
 
-def test_pop_empty_array():
+def test_pop_empty_arrays():
     tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="arrays")
     t, ut, v, uv = tsb.show(n_samples=n_samples)
     
