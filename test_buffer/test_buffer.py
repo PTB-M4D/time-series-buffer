@@ -255,14 +255,14 @@ def test_pop_empty_array():
     result = tsb.pop()
 
     assert isinstance(result, np.ndarray)
-    assert result.shape == (0,4)
+    assert result.shape == (0, 4)
     assert result.size == 0
 
 
 def test_pop_empty_arrays():
     tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="arrays")
     t, ut, v, uv = tsb.show(n_samples=n_samples)
-    
+
     assert isinstance(t, np.ndarray)
     assert isinstance(ut, np.ndarray)
     assert isinstance(v, np.ndarray)
@@ -278,14 +278,14 @@ def test_pop_empty_uarray():
     result = tsb.show(n_samples=n_samples)
 
     assert isinstance(result, np.ndarray)
-    assert result.shape == (0,2)
+    assert result.shape == (0, 2)
     assert result.size == 0
 
 
 def test_pop_empty_uarrays():
     tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="uarrays")
     t, v = tsb.show(n_samples=n_samples)
-    
+
     assert isinstance(t, np.ndarray)
     assert isinstance(v, np.ndarray)
     assert t.size == 0

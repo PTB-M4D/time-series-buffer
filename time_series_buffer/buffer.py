@@ -236,7 +236,7 @@ class TimeSeriesBuffer:
                 ut = np.empty((0))
                 v = np.empty((0))
                 uv = np.empty((0))
-            
+
             # handle non empty buffer
             else:
                 data = np.array(samples)
