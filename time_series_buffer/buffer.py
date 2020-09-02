@@ -229,14 +229,24 @@ class TimeSeriesBuffer:
             return samples
 
         else:
-            data = np.array(samples)
-            t = data[:, 0]
-            ut = data[:, 1]
-            v = data[:, 2]
-            uv = data[:, 3]
+            # handle empty buffer
+            if len(samples) == 0:
+                data = np.empty((0, 4))
+                t = np.empty((0))
+                ut = np.empty((0))
+                v = np.empty((0))
+                uv = np.empty((0))
+
+            # handle non empty buffer
+            else:
+                data = np.array(samples)
+                t = data[:, 0]
+                ut = data[:, 1]
+                v = data[:, 2]
+                uv = data[:, 3]
 
             if self.return_type == "array":
-                return np.vstack(data)
+                return data
 
             elif self.return_type == "arrays":
                 return t, ut, v, uv

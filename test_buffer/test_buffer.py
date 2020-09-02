@@ -182,6 +182,7 @@ def test_show_all():
     # check if newest elements are received and order is as expected
     assert np.all(result == data)
 
+
 def test_return_format_list():
     M = 4
     tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="list")
@@ -247,3 +248,45 @@ def test_return_format_uarrays():
     assert isinstance(v, np.ndarray)
     assert isinstance(t[0], uncertainties.core.Variable)
     assert isinstance(v[0], uncertainties.core.Variable)
+
+
+def test_pop_empty_array():
+    tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="array")
+    result = tsb.pop()
+
+    assert isinstance(result, np.ndarray)
+    assert result.shape == (0, 4)
+    assert result.size == 0
+
+
+def test_pop_empty_arrays():
+    tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="arrays")
+    t, ut, v, uv = tsb.show(n_samples=n_samples)
+
+    assert isinstance(t, np.ndarray)
+    assert isinstance(ut, np.ndarray)
+    assert isinstance(v, np.ndarray)
+    assert isinstance(uv, np.ndarray)
+    assert t.size == 0
+    assert ut.size == 0
+    assert v.size == 0
+    assert uv.size == 0
+
+
+def test_pop_empty_uarray():
+    tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="uarray")
+    result = tsb.show(n_samples=n_samples)
+
+    assert isinstance(result, np.ndarray)
+    assert result.shape == (0, 2)
+    assert result.size == 0
+
+
+def test_pop_empty_uarrays():
+    tsb = TimeSeriesBuffer(maxlen=maxlen, return_type="uarrays")
+    t, v = tsb.show(n_samples=n_samples)
+
+    assert isinstance(t, np.ndarray)
+    assert isinstance(v, np.ndarray)
+    assert t.size == 0
+    assert v.size == 0
