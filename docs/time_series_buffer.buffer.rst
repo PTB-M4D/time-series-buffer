@@ -1,11 +1,5 @@
-Time Series Buffer - the metrological time series buffer
-=============================================================
+TimeSeriesBuffer - the reference
+================================
 
 .. automodule:: time_series_buffer.buffer
-    :members:
-
-TimeSeriesBuffer
-----------------
-
-.. autoclass:: time_series_buffer.buffer.TimeSeriesBuffer
     :members:
