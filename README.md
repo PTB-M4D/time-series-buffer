@@ -1,4 +1,5 @@
-![Python package](https://github.com/PTB-PSt1/time-series-buffer/workflows/Python%20package/badge.svg?branch=master)
+[![Python package](https://github.com/PTB-PSt1/time-series-buffer/workflows/Python%20package/badge.svg?branch=master)](https://pypi.org/project/time-series-buffer/)
+[![Documentation Status](https://readthedocs.org/projects/time-series-buffer/badge/?version=latest)](https://time-series-buffer.readthedocs.io/en/latest/)
 
 # time-series-buffer - a metrological time-series buffer
 
